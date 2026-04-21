@@ -3,7 +3,7 @@ export const SITE = {
   author: "Hoan K",
   profile: "https://github.com/hoank",
   desc: "Personal portfolio and technical blog.",
-  title: "Hoan's Blog",
+  title: "Hnk",
   ogImage: "astropaper-og.jpg",
   lightAndDarkMode: true,
   postPerIndex: 4,
