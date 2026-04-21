@@ -1,6 +1,6 @@
 ---
 title: "Go Scheduler Deep Dive: GMP Model, Preemption, and Performance Tuning"
-pubDatetime: 2026-04-24T00:00:00Z
+pubDatetime: 2026-04-21T00:00:00Z
 description: "A deep technical guide to Go runtime scheduling internals and practical performance tuning for CPU-bound and I/O-heavy services."
 author: "Hoan K"
 tags:

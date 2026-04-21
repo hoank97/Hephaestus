@@ -1,6 +1,6 @@
 ---
 title: "Advanced Go Concurrency Patterns: Pipelines, Fan-Out/Fan-In, and Backpressure"
-pubDatetime: 2026-04-23T00:00:00Z
+pubDatetime: 2026-04-20T00:00:00Z
 description: "Senior-level concurrency patterns for building high-throughput, resilient systems with bounded resources and graceful failure handling."
 author: "Hoan K"
 tags:

@@ -1,6 +1,6 @@
 ---
 title: "Goroutine Leaks in Production: Detection, Prevention, and Runtime Analysis"
-pubDatetime: 2026-04-22T00:00:00Z
+pubDatetime: 2026-04-19T00:00:00Z
 description: "A senior-level deep dive into diagnosing and preventing goroutine leaks using pprof, runtime traces, and robust cancellation design."
 author: "Hoan K"
 tags:
