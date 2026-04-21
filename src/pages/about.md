@@ -3,35 +3,37 @@ layout: ../layouts/AboutLayout.astro
 title: "About"
 ---
 
-AstroPaper is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
+This is a personal study blog built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/), focused on sharing technical knowledge and engineering insights.
 
-![Astro Paper](public/astropaper-og.jpg)
+## What You'll Find Here
 
-AstroPaper provides a solid foundation for blogs, or even portfolios\_ with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box.
+This blog covers advanced software engineering topics, with a focus on:
 
-The blog posts in this theme also serve as guides, docs or example articles\_ making AstroPaper a flexible starting point for your next content-driven site.
+- **Backend Systems**: Database optimization, connection pooling, distributed systems
+- **Concurrency & Performance**: Deep dives into Go goroutines, scheduling, and runtime behavior
+- **System Design**: Scalable architectures and production-grade patterns
+- **Engineering Best Practices**: Real-world lessons from building reliable systems
 
-## Features
+## Content Philosophy
 
-AstroPaper comes with a set of useful features that make content publishing easy and effective:
+Posts here are written for senior engineers who want to understand not just the "how" but the "why" behind technical decisions. Each article aims to:
 
-- SEO-friendly
-- Fast performance
-- Light & dark mode
-- Highly customizable
-- Organizable blog posts
-- Responsive & accessible
-- Static search with [PageFind](https://pagefind.app/)
-- Automatic social image generation
+- Go beyond surface-level tutorials
+- Include practical code examples and benchmarks
+- Reference production scenarios and debugging techniques
+- Provide actionable takeaways
 
-and so much more.
+## Tech Stack
 
-## Show your support
+This site is built with:
 
-If you like [AstroPaper](https://github.com/satnaing/astro-paper), consider giving it a star ⭐️.
+- **Astro** for static site generation
+- **Tailwind CSS** for styling
+- **TypeScript** for type safety
+- **Markdown/MDX** for content authoring
 
-Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an [issue](https://github.com/satnaing/astro-paper/issues), submit a [pull request](https://github.com/satnaing/astro-paper/pulls) or start a [discussion](https://github.com/satnaing/astro-paper/discussions).
+Features include SEO optimization, dark mode, fast performance, and responsive design.
 
-If you find this theme helpful, you can also [sponsor me on GitHub](https://github.com/sponsors/satnaing) or [buy me a coffee](https://buymeacoffee.com/satnaing) to show your support — every penny counts.
+## About the Author
 
-Kyay zuu! 🙏🏼
+I'm HoaNK, a software engineer passionate about building high-performance systems and sharing knowledge with the engineering community.
