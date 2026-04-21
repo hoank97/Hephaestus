@@ -30,6 +30,42 @@ Understanding scheduler internals turns blind tuning into systematic optimizatio
 
 ## The GMP model
 
+```mermaid
+graph TB
+    subgraph Runtime["Go Runtime Scheduler"]
+        P1["P (Processor 1)<br/>Local Queue: [G1, G2]"]
+        P2["P (Processor 2)<br/>Local Queue: [G4]"]
+        GQ["Global Queue<br/>[G5, G6, G7]"]
+    end
+    
+    subgraph Threads["OS Threads"]
+        M1["M (Thread 1)"]
+        M2["M (Thread 2)"]
+        M3["M (Thread 3)<br/>idle"]
+    end
+    
+    subgraph Goroutines["Goroutines"]
+        G1["G1<br/>running"]
+        G2["G2<br/>runnable"]
+        G3["G3<br/>blocked on I/O"]
+        G4["G4<br/>running"]
+    end
+    
+    M1 -->|holds| P1
+    M2 -->|holds| P2
+    P1 -->|executes| G1
+    P2 -->|executes| G4
+    G3 -.->|parked in| NP["Netpoller"]
+    
+    style P1 fill:#60a5fa,stroke:#2563eb,color:#000
+    style P2 fill:#60a5fa,stroke:#2563eb,color:#000
+    style M1 fill:#fb923c,stroke:#ea580c,color:#000
+    style M2 fill:#fb923c,stroke:#ea580c,color:#000
+    style M3 fill:#d1d5db,stroke:#6b7280,color:#000
+    style G1 fill:#4ade80,stroke:#16a34a,color:#000
+    style G4 fill:#4ade80,stroke:#16a34a,color:#000
+```
+
 Go scheduler is built around three core abstractions:
 
 - **G (Goroutine):** lightweight execution unit
@@ -46,6 +82,29 @@ Go scheduler is built around three core abstractions:
 Think of `P` as CPU scheduling tokens. Default number of `P` is `GOMAXPROCS`.
 
 ## Run queues and work stealing
+
+```mermaid
+flowchart LR
+    subgraph P1["Processor P1"]
+        LQ1["Local Queue<br/>[G1, G2, G3]"]
+    end
+    
+    subgraph P2["Processor P2"]
+        LQ2["Local Queue<br/>[] (empty)"]
+    end
+    
+    GQ["Global Queue<br/>[G8, G9]"]
+    
+    LQ2 -->|1. Check local (empty)| WS["Work Stealing"]
+    WS -->|2. Check global| GQ
+    WS -->|3. Steal half from P1| LQ1
+    LQ1 -->|stolen: G2,G3| LQ2
+    
+    style LQ1 fill:#93c5fd,stroke:#2563eb,color:#000
+    style LQ2 fill:#fde68a,stroke:#d97706,color:#000
+    style GQ fill:#c4b5fd,stroke:#7c3aed,color:#000
+    style WS fill:#fca5a5,stroke:#dc2626,color:#000
+```
 
 Each `P` has a local queue for low-contention scheduling. There is also a global run queue for overflow and balancing.
 
@@ -123,6 +182,26 @@ func BenchmarkWithProcs(b *testing.B) {
 Pick based on throughput + p95/p99 latency, not throughput alone.
 
 ## Blocking syscalls and thread behavior
+
+```mermaid
+sequenceDiagram
+    participant G as Goroutine G1
+    participant P as Processor P
+    participant M1 as Thread M1 (running)
+    participant M2 as Thread M2 (idle)
+    participant OS as Operating System
+    
+    G->>M1: Execute code
+    M1->>P: Holds P
+    G->>OS: Blocking syscall (read file)
+    Note over M1,OS: M1 blocks on syscall
+    P->>M1: Detach P from M1
+    P->>M2: Attach P to M2
+    Note over M2: M2 continues executing other goroutines
+    OS-->>M1: Syscall returns
+    M1->>G: Resume G1
+    G->>P: Try to reacquire P or wait
+```
 
 When a goroutine enters a blocking syscall, runtime may detach `P` from blocked `M` and attach it to another `M` so other goroutines can continue.
 
@@ -252,6 +331,31 @@ Optimization often requires both:
 - allocation reduction (`sync.Pool`, object reuse, batching)
 
 ## Key takeaways
+
+```mermaid
+mindmap
+  root((Go Scheduler))
+    GMP Model
+      G = Goroutine
+      M = OS Thread
+      P = Processor Token
+    Scheduling
+      Local Run Queues
+      Global Queue
+      Work Stealing
+    Performance
+      GOMAXPROCS tuning
+      Context switch overhead
+      Cache locality
+    Observability
+      schedtrace
+      go tool trace
+      pprof
+    Anti-patterns
+      Unbounded goroutines
+      Lock contention
+      Blocking syscalls
+```
 
 - Go scheduler uses GMP model to multiplex many goroutines over limited threads.
 - `GOMAXPROCS` is a tuning lever, not a magic throughput knob.

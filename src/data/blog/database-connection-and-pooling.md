@@ -41,6 +41,30 @@ PostgreSQL has hard limit of simultaneous connections, configured by `max_connec
 
 ## Lifecycle of Connection
 
+```mermaid
+sequenceDiagram
+    participant App
+    participant Network
+    participant DB
+    
+    Note over App,DB: 1. Open Connection (20-100ms)
+    App->>Network: TCP 3-way handshake
+    Network->>DB: SYN, SYN-ACK, ACK
+    App->>DB: SSL/TLS negotiation
+    App->>DB: Authentication
+    DB->>DB: Spawn backend process
+    DB-->>App: Connection ready
+    
+    Note over App,DB: 2. Execute Queries
+    App->>DB: SQL Query
+    DB-->>App: Results
+    
+    Note over App,DB: 3. Close Connection
+    App->>DB: Close
+    DB->>DB: Kill backend process
+    DB->>DB: Free memory
+```
+
 **Open the connection** (takes 20-100 ms depending on network latency)
 - TCP 3 way handshake
 - SSL/TLS Negotiation(if enabled)
@@ -87,6 +111,39 @@ Idea is simple: instead of creating new connection every time, application borro
 Idle connections are not there for free, it blocks 10-30MB of your memory to keep it opened.
 
 ## How a Pool works
+
+```mermaid
+graph TB
+    subgraph Pool["Connection Pool"]
+        I1[Idle Conn 1]
+        I2[Idle Conn 2]
+        A1[Active Conn 3]
+        A2[Active Conn 4]
+    end
+    
+    subgraph App["Application"]
+        R1[Request 1]
+        R2[Request 2]
+        R3[Request 3]
+    end
+    
+    subgraph DB["Database"]
+        P1[Backend Process 1]
+        P2[Backend Process 2]
+        P3[Backend Process 3]
+        P4[Backend Process 4]
+    end
+    
+    R1 -->|Borrow| I1
+    R2 -->|Borrow| I2
+    I1 -.->|Use| A1
+    I2 -.->|Use| A2
+    A1 -->|Execute| P3
+    A2 -->|Execute| P4
+    A1 -.->|Return| I1
+    A2 -.->|Return| I2
+    R3 -->|Wait| Pool
+```
 
 **Initialisation:** When your app starts, the pool opens a minimum number of connections (e.g. 3 or 5) to the database and keep them alive in a queue.
 

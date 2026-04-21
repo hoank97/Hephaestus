@@ -39,6 +39,30 @@ Leaked goroutines cause more than memory waste:
 
 ## Real-world leak patterns
 
+```mermaid
+graph TD
+    subgraph Leak1["Pattern 1: Missing Cancellation"]
+        H[HTTP Handler] -->|spawn| G1[Goroutine]
+        G1 -->|blocks forever| API[Slow API Call]
+        C[Client Disconnects] -.->|no signal| G1
+    end
+    
+    subgraph Leak2["Pattern 2: Blocked Send"]
+        P[Producer] -->|ch <- data| CH1[Channel]
+        CH1 -.->|no consumer| BLOCK1[Blocked Forever]
+    end
+    
+    subgraph Leak3["Pattern 3: Blocked Receive"]
+        CH2[Channel] -->|<- ch| CON[Consumer]
+        CON -.->|never closed| BLOCK2[Blocked Forever]
+    end
+    
+    subgraph Leak4["Pattern 4: Forgotten Ticker"]
+        T[Ticker] -->|tick| LOOP[for range ticker.C]
+        LOOP -->|never stops| LEAK[Goroutine Leak]
+    end
+```
+
 ### 1) Missing cancellation in request-scoped work
 
 ```go
@@ -91,6 +115,18 @@ func startMetricsLoop() {
 ```
 
 ## Detection strategy in production
+
+```mermaid
+graph LR
+    A[Monitor Goroutine Count] --> B{Growth Detected?}
+    B -->|Yes| C[Capture pprof Profile]
+    C --> D[Analyze Stack Traces]
+    D --> E[Group by Blocking Frame]
+    E --> F[Identify Leak Source]
+    F --> G[Fix & Deploy]
+    G --> H[Verify Slope Flattens]
+    B -->|No| A
+```
 
 ### Step 1: Track goroutine count as a first-class SLI
 
