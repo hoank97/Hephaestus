@@ -44,6 +44,18 @@ A pipeline is a series of stages connected by channels. Each stage:
 - Performs computation
 - Sends results downstream via outbound channel
 
+```mermaid
+flowchart LR
+    A(["📥 Source\n(generator)"]) -->|"chan int"| B["⚙️ Stage 1\n(square)"]
+    B -->|"chan int"| C["⚙️ Stage 2\n(filter)"]
+    C -->|"chan int"| D(["📤 Sink\n(consumer)"])
+
+    style A fill:#4ade80,stroke:#16a34a,color:#000
+    style D fill:#f87171,stroke:#dc2626,color:#000
+    style B fill:#60a5fa,stroke:#2563eb,color:#000
+    style C fill:#60a5fa,stroke:#2563eb,color:#000
+```
+
 ### Basic pipeline structure
 
 ```go
@@ -101,6 +113,26 @@ func main() {
 **Fan-out**: distribute work from one channel to multiple workers.
 
 **Fan-in**: merge results from multiple workers into one channel.
+
+```mermaid
+flowchart LR
+    IN(["📥 Input\nChannel"]) -->|jobs| W1["⚙️ Worker 1"]
+    IN -->|jobs| W2["⚙️ Worker 2"]
+    IN -->|jobs| W3["⚙️ Worker 3"]
+
+    W1 -->|results| OUT(["📤 Fan-In\nMerge"])
+    W2 -->|results| OUT
+    W3 -->|results| OUT
+
+    OUT --> SINK(["✅ Consumer"])
+
+    style IN fill:#a78bfa,stroke:#7c3aed,color:#000
+    style OUT fill:#fb923c,stroke:#ea580c,color:#000
+    style SINK fill:#4ade80,stroke:#16a34a,color:#000
+    style W1 fill:#60a5fa,stroke:#2563eb,color:#000
+    style W2 fill:#60a5fa,stroke:#2563eb,color:#000
+    style W3 fill:#60a5fa,stroke:#2563eb,color:#000
+```
 
 ### Fan-out with bounded workers
 
@@ -179,6 +211,27 @@ func processPipeline(ctx context.Context, jobs []Job) <-chan Result {
 ## Pattern 3: Bounded concurrency with semaphore
 
 Limit concurrent operations using a buffered channel as semaphore:
+
+```mermaid
+sequenceDiagram
+    participant Main as Main Goroutine
+    participant Sem as Semaphore Buffer (cap=3)
+    participant W1 as Worker A
+    participant W2 as Worker B
+    participant W3 as Worker C
+    participant W4 as Worker D (waiting)
+
+    Main->>Sem: acquire (1/3)
+    Main->>W1: launch
+    Main->>Sem: acquire (2/3)
+    Main->>W2: launch
+    Main->>Sem: acquire (3/3)
+    Main->>W3: launch
+    Main->>Sem: acquire → BLOCKS (full)
+    W1->>Sem: release (2/3)
+    Sem-->>Main: slot free!
+    Main->>W4: launch
+```
 
 ```go
 func processWithLimit(ctx context.Context, items []Item, limit int) []Result {
@@ -447,6 +500,26 @@ Look for:
 - Goroutine scheduling overhead
 
 ## Key takeaways
+
+```mermaid
+flowchart TD
+    A["🎯 Production Concurrency in Go"]
+
+    A --> B["🔗 Pipelines\nComposable stages via channels"]
+    A --> C["🌀 Fan-Out / Fan-In\nParallel work + merged results"]
+    A --> D["🚦 Bounded Concurrency\nSemaphore = buffered channel"]
+    A --> E["🔄 Backpressure\nUnbuffered channels block senders"]
+    A --> F["❌ Error Propagation\nerrgroup cancels all on first error"]
+    A --> G["⏱️ Timeouts\ncontext.WithTimeout / Deadline"]
+
+    style A fill:#0f4c75,stroke:#475569,color:#fff
+    style B fill:#0f4c75,stroke:#1b6ca8,color:#fff
+    style C fill:#0f4c75,stroke:#1b6ca8,color:#fff
+    style D fill:#0f4c75,stroke:#1b6ca8,color:#fff
+    style E fill:#0f4c75,stroke:#1b6ca8,color:#fff
+    style F fill:#0f4c75,stroke:#1b6ca8,color:#fff
+    style G fill:#0f4c75,stroke:#1b6ca8,color:#fff
+```
 
 - **Pipelines** structure concurrent work into composable stages
 - **Fan-out/fan-in** parallelizes work while maintaining order and error handling

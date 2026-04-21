@@ -163,6 +163,59 @@ const nextPost =
   <Footer />
 </Layout>
 
+<script>
+  // Mermaid diagram renderer
+  // Runs client-side after each page navigation
+  async function initMermaid() {
+    const codeBlocks = document.querySelectorAll("pre code.language-mermaid");
+    if (codeBlocks.length === 0) return;
+
+    const { default: mermaid } = await import("mermaid");
+
+    const isDark =
+      document.documentElement.getAttribute("data-theme") === "dark" ||
+      document.documentElement.classList.contains("dark");
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: isDark ? "dark" : "default",
+      themeVariables: {
+        fontSize: "15px",
+        fontFamily: "inherit",
+      },
+      flowchart: { curve: "basis", padding: 20 },
+      sequence: { useMaxWidth: true },
+    });
+
+    for (const code of codeBlocks) {
+      const pre = code.parentElement;
+      if (!pre) continue;
+
+      const graphDefinition = code.textContent ?? "";
+      const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
+
+      const div = document.createElement("div");
+      div.className =
+        "mermaid-diagram my-6 flex justify-center overflow-x-auto rounded-lg border border-border bg-muted p-4";
+      div.id = id;
+
+      try {
+        const { svg } = await mermaid.render(id + "-svg", graphDefinition);
+        div.innerHTML = svg;
+        pre.replaceWith(div);
+      } catch (err) {
+        // Render failed — show a styled error block instead of crashing
+        div.innerHTML = `<pre class="text-red-500 text-sm whitespace-pre-wrap">${err}</pre>`;
+        pre.replaceWith(div);
+      }
+    }
+  }
+
+  // Run on first load and on every Astro client-side page swap
+  initMermaid();
+  document.addEventListener("astro:page-load", initMermaid);
+</script>
+
 <script is:inline data-astro-rerun>
   /** Create a progress indicator
    *  at the top */
