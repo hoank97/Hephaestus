@@ -1,0 +1,20 @@
+{
+   "env": {
+    "ANTHROPIC_BASE_URL": "https://9claude.site/v1",
+    "ANTHROPIC_AUTH_TOKEN": "sk-eec182717199bf87-c1kakq-1dc80674",
+    "ANTHROPIC_MODEL": "claude-opus-4.6"
+  },
+  "model": "claude-opus-4.6",
+  "availableModels": [
+    "claude-4-opus",
+    "claude-4-opus-thinking",
+    "claude-4-sonnet",
+    "claude-4-sonnet-thinking"
+  ],
+  "modelOverrides": {
+    "claude-4-opus": "claude-opus-4.6",
+    "claude-4-opus-thinking": "claude-opus-4.6",
+    "claude-4-sonnet": "claude-opus-4.6",
+    "claude-4-sonnet-thinking": "claude-opus-4.6"
+  }
+}
