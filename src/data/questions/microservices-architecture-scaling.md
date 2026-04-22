@@ -1,46 +1,51 @@
 ---
 question: "What are the key considerations for Microservices Architecture & Scaling?"
-answer: "Key considerations include service decomposition by business capability, independent deployment and scaling, distributed data management, inter-service communication patterns, fault tolerance, and observability across services."
-tags: ["microservices", "architecture", "scaling", "distributed-systems"]
+answer: "Service decomposition by business domain, independent deployment/scaling per service, distributed data management (database-per-service), async communication (message queues), observability (tracing/logging), and fault isolation (circuit breakers). Trade-off: operational complexity vs team autonomy."
+tags: ["microservices"]
 pubDatetime: 2026-04-22T10:45:00Z
 featured: false
 ---
 
-Microservices architecture breaks down applications into small, independent services. Here are the critical considerations:
+## Core Principles
 
-**Service Design:**
-- Decompose by business domain (Domain-Driven Design)
-- Single responsibility per service
-- Loose coupling, high cohesion
-- API-first design with versioning
+1. **Decompose by domain** (DDD) — not by technical layer
+2. **Database per service** — avoid shared DB (bottleneck + coupling)
+3. **Independent deploy** — each service has own CI/CD pipeline
+4. **Scale independently** — only scale bottleneck services
 
-**Scaling Strategies:**
-- Horizontal scaling (add more instances)
-- Independent scaling per service based on load
-- Auto-scaling with container orchestration (Kubernetes)
-- Database per service pattern to avoid bottlenecks
+## Scaling Strategies
 
-**Communication:**
-- Synchronous: REST, gRPC
-- Asynchronous: Message queues (RabbitMQ, Kafka)
-- Service mesh for traffic management (Istio, Linkerd)
-- API Gateway for external clients
+**Horizontal scaling:**
+- Add instances behind load balancer
+- Stateless services (session in Redis/DB)
+- Auto-scale based on CPU/memory/queue depth
 
-**Data Management:**
-- Database per service (avoid shared databases)
-- Event sourcing and CQRS for complex workflows
-- Eventual consistency over strong consistency
-- Distributed transactions with Saga pattern
+**Data scaling:**
+- Read replicas for read-heavy services
+- Sharding for write-heavy (partition by user ID, region)
+- CQRS for complex read patterns
 
-**Operational Challenges:**
-- Distributed tracing (Jaeger, Zipkin)
-- Centralized logging (ELK stack)
-- Service discovery and load balancing
-- Circuit breakers for fault tolerance
-- Monitoring and alerting at scale
+## Communication Patterns
 
-**When to use:**
-- Large teams needing independent deployment
-- Different scaling requirements per component
-- Technology diversity needs
-- Avoid for small teams or simple applications (monolith first)
+**Sync (REST/gRPC):** Simple but creates tight coupling. Use for low-latency reads.  
+**Async (Kafka/RabbitMQ):** Decouples services, handles backpressure. Use for events/commands.  
+**Saga pattern:** Distributed transactions via compensating actions (not 2PC).
+
+## Production Gotchas
+
+**Cascading failures:** Service A down → Service B retries → overloads Service C.  
+**Fix:** Circuit breaker (fail fast after N errors), timeout (kill slow calls), bulkhead (isolate thread pools).
+
+**Distributed tracing:** Single request spans 5+ services. Without trace ID, debugging is impossible.  
+**Fix:** OpenTelemetry, Jaeger. Inject trace ID in all logs.
+
+**Data consistency:** No ACID across services. Eventual consistency via events.  
+**Fix:** Idempotent handlers (dedupe by message ID), outbox pattern (atomic DB write + event publish).
+
+## When NOT to Use
+
+- Team <10 people (coordination overhead > benefit)
+- Simple domain (CRUD app doesn't need microservices)
+- No DevOps expertise (will drown in operational complexity)
+
+**Rule:** Start monolith. Extract microservices when team/domain/scaling demands it.

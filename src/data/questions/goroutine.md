@@ -1,42 +1,69 @@
 ---
 question: "What is a Goroutine and how does it differ from threads?"
-answer: "A goroutine is a lightweight, independently executing function managed by the Go runtime. Unlike OS threads, goroutines have smaller stack sizes (starting at ~2KB vs 1-2MB), are multiplexed onto fewer OS threads by the Go scheduler, and have much lower creation and context-switching overhead."
-tags: ["go", "goroutine", "concurrency", "golang", "threading"]
+answer: "Goroutine is a lightweight function managed by Go runtime (~2KB stack vs 1-2MB for OS threads). Go multiplexes thousands of goroutines onto few OS threads (M:N scheduling). Cheaper to create, faster context switch, but requires explicit coordination to avoid leaks."
+tags: ["go"]
 pubDatetime: 2026-04-22T10:52:00Z
 featured: false
 ---
 
-Goroutines are Go's fundamental unit of concurrency, enabling thousands or millions of concurrent tasks efficiently.
+## Core Difference
 
-**Key characteristics:**
-- Launched with `go functionName()` or `go func() { ... }()`
-- Managed by Go runtime scheduler, not OS
-- Start with ~2KB stack that grows/shrinks dynamically
-- Cheap to create (thousands cost less than dozens of OS threads)
+**Goroutine:** Runtime-scheduled, cooperative (yields at function calls/channel ops), ~2KB initial stack.  
+**OS Thread:** Kernel-scheduled, preemptive, 1-2MB fixed stack.
 
-**Goroutine vs OS Thread:**
-- **Goroutines:** lightweight, runtime-scheduled, cooperative multitasking
-- **OS Threads:** heavyweight, kernel-scheduled, preemptive multitasking
-- Go multiplexes many goroutines onto a small pool of OS threads (M:N scheduling)
+**Cost:** Creating 10k goroutines ≈ 20MB. Creating 10k threads ≈ 10-20GB + kernel overhead.
 
-**How the scheduler works:**
-- Uses work-stealing algorithm across processor cores
-- Goroutines yield at function calls, channel ops, blocking syscalls
-- No manual thread management needed
+## When to Use
 
-**Common patterns:**
-- Fire-and-forget: `go doWork()`
-- Wait for completion: use `sync.WaitGroup` or channels
-- Bounded concurrency: worker pools with semaphore or buffered channels
+**Use goroutines for:**
+- I/O-bound tasks (HTTP requests, DB queries)
+- Event handlers (one goroutine per connection)
+- Background workers (async processing)
 
-**Pitfalls to avoid:**
-- Goroutine leaks (goroutines blocked forever on channels)
-- Race conditions (use `go run -race` to detect)
-- Forgetting to wait for goroutines before `main()` exits
-- Capturing loop variables incorrectly in closures
+**Don't spawn unlimited goroutines:**
+- CPU-bound tasks → limit to `runtime.NumCPU()`
+- Resource-intensive ops → use worker pool with bounded concurrency
 
-**Best practices:**
-- Always have a clear lifecycle and exit condition
-- Use `context.Context` for cancellation propagation
-- Limit goroutine count for resource-intensive tasks
-- Profile with `pprof` to detect leaks and bottlenecks
+## Common Pitfalls
+
+**Goroutine leak:** Launched but never exits (blocked on channel, waiting forever).  
+**Detection:** `runtime.NumGoroutine()` keeps growing. Use `pprof` goroutine profile.  
+**Fix:** Always provide exit path via `context.Context` or `done` channel.
+
+**Race condition:** Multiple goroutines access shared variable without sync.  
+**Detection:** `go test -race` (always run in CI).  
+**Fix:** Use `sync.Mutex`, `sync/atomic`, or channels.
+
+**Loop variable capture (Go <1.22):**
+```go
+// WRONG
+for _, item := range items {
+    go func() { process(item) }() // all see last item
+}
+// FIX
+for _, item := range items {
+    item := item // capture
+    go func() { process(item) }()
+}
+```
+
+## Production Pattern
+
+```go
+// Bounded worker pool
+sem := make(chan struct{}, 100) // max 100 concurrent
+var wg sync.WaitGroup
+
+for _, task := range tasks {
+    wg.Add(1)
+    sem <- struct{}{} // acquire
+    go func(t Task) {
+        defer wg.Done()
+        defer func() { <-sem }() // release
+        process(t)
+    }(task)
+}
+wg.Wait()
+```
+
+**Rule:** If goroutine count unbounded, you have a resource leak waiting to happen.

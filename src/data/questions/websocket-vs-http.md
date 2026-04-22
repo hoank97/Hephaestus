@@ -1,27 +1,37 @@
 ---
 question: "Compare WebSocket vs. HTTP"
-answer: "HTTP is a request-response protocol where the client initiates each communication, while WebSocket is a full-duplex protocol that maintains a persistent connection allowing both client and server to send data at any time."
-tags: ["websocket", "http", "networking", "protocol"]
+answer: "HTTP is request-response (client initiates, ~500B header overhead per request). WebSocket is full-duplex persistent connection (~2-14B frame overhead). Use HTTP for CRUD/APIs. Use WebSocket when server must push frequently or sub-second latency required."
+tags: ["networking"]
 pubDatetime: 2026-04-22T10:43:00Z
 featured: false
 ---
 
-HTTP and WebSocket are both communication protocols, but they serve different purposes:
+## Core Trade-off
+
+**HTTP:** Stateless, cacheable, simple — but high latency (50-200ms/request) and header overhead.  
+**WebSocket:** Low latency (1-10ms/message), bidirectional — but stateful (harder to scale), no caching, requires reconnect logic.
+
+## When to Use
 
 **HTTP:**
-- Request-response model (client always initiates)
-- Stateless by default
-- New connection for each request (or connection pooling with HTTP/1.1+)
-- Overhead from headers on every request
-- Best for: REST APIs, web pages, file downloads
+- CRUD operations, REST APIs
+- Cacheable content (CDN-friendly)
+- Infrequent updates (<1/min)
 
 **WebSocket:**
-- Full-duplex bidirectional communication
-- Persistent connection after initial handshake
-- Low latency, minimal overhead after connection established
-- Server can push data without client request
-- Best for: Real-time apps (chat, live feeds, gaming, collaborative editing)
+- Real-time collaboration (Google Docs, Figma)
+- Live feeds (stock tickers, chat)
+- Server must push without polling
 
-**When to use:**
-- Use HTTP for traditional request-response patterns
-- Use WebSocket when you need real-time, bidirectional communication with low latency
+## Production Gotchas
+
+**WebSocket:**
+- Silent disconnect → implement heartbeat (ping every 30s)
+- Reconnection storm → exponential backoff + jitter
+- Memory leak from dead connections → idle timeout (5min)
+- Blocked by corporate firewalls → fallback to long-polling
+- Stateful = sticky sessions or Redis pub/sub for multi-server
+
+**Cost:** 10k WebSocket connections ≈ 1-2GB RAM. If update frequency <1/min, HTTP polling is cheaper.
+
+**Rule:** Start HTTP. Add WebSocket only when latency/push-frequency demands it.

@@ -1,35 +1,57 @@
 ---
 question: "What is a Go channel and when should you use it?"
-answer: "A Go channel is a typed conduit that lets goroutines communicate safely by sending and receiving values, and it should be used to coordinate concurrent work, pass data between workers, and control synchronization without shared-memory locks where possible."
-tags: ["go", "channel", "concurrency", "golang"]
+answer: "Channel is Go's typed conduit for goroutine communication. Use for passing data between workers, signaling events, or coordinating concurrency. Prefer channels over shared memory when communication pattern is clear."
+tags: ["go"]
 pubDatetime: 2026-04-22T10:50:00Z
 featured: false
 ---
 
-A channel in Go is a built-in concurrency primitive used for communication between goroutines.
+## Core Concept
 
-**Core idea:**
-- `ch <- v` sends value `v` to channel `ch`
-- `v := <-ch` receives a value from channel `ch`
-- Channels are type-safe (`chan int`, `chan string`, etc.)
+`ch <- v` sends, `v := <-ch` receives. Type-safe (`chan int`, `chan string`). Blocks until counterpart ready (unbuffered) or buffer full/empty (buffered).
 
-**Why channels matter:**
-- Avoids direct shared-memory coordination in many cases
-- Makes producer/consumer flows explicit
-- Helps synchronize goroutines naturally
+## When to Use
 
-**Buffered vs unbuffered:**
-- **Unbuffered channel:** send blocks until a receiver is ready
-- **Buffered channel:** send blocks only when buffer is full
+**Use channels for:**
+- Worker pools (distribute jobs across goroutines)
+- Event signaling (`done` channel, close to broadcast)
+- Pipeline patterns (fan-out/fan-in)
+- Rate limiting (buffered channel as semaphore)
 
-**Common patterns:**
-- Worker pools
-- Fan-out / fan-in pipelines
-- Timeout and cancellation with `select`
-- Signaling completion via `done` channels or `context.Context`
+**Don't use when:**
+- Simple counter/flag (use `sync/atomic` instead)
+- Protecting complex state (use `sync.Mutex` instead)
+- No actual communication needed (just synchronization → `sync.WaitGroup`)
 
-**Best practices:**
-- Close channels only from the sender side
-- Use `select` for non-blocking or multi-channel coordination
-- Prefer `context.Context` for cancellation across APIs
-- Keep channel ownership and lifecycle clear to avoid leaks/deadlocks
+## Common Pitfalls
+
+**Deadlock:** Send/receive on same goroutine without buffer.  
+**Goroutine leak:** Sender blocked forever after receiver exits (timeout case).  
+**Fix:** Use buffered channel (size 1) for async send, or `select` with `default`/timeout.
+
+**Forgotten close:** `range ch` blocks forever if sender never closes.  
+**Fix:** Always close from sender side. Never close from receiver (panic if sender still writing).
+
+## Production Pattern
+
+```go
+// Worker pool with graceful shutdown
+jobs := make(chan Job, 100)
+results := make(chan Result, 100)
+ctx, cancel := context.WithCancel(context.Background())
+
+for w := 0; w < 10; w++ {
+    go func() {
+        for {
+            select {
+            case job := <-jobs:
+                results <- process(job)
+            case <-ctx.Done():
+                return
+            }
+        }
+    }()
+}
+```
+
+**Rule:** Prefer `context.Context` for cancellation over custom `done chan struct{}`.
