@@ -6,11 +6,33 @@ import Tag from "@/components/Tag.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
+import { slugifyStr } from "@/utils/slugify";
 import { SITE } from "@/config";
 
 const posts = await getCollection("blog");
+const questions = await getCollection("questions");
 
-let tags = getUniqueTags(posts);
+// Get tags from both posts and questions
+const postTags = getUniqueTags(posts);
+const questionTagsSet = new Set<string>();
+
+questions.forEach(q => {
+  q.data.tags.forEach(tag => {
+    questionTagsSet.add(slugifyStr(tag));
+  });
+});
+
+// Merge tags from both collections
+const allTagsMap = new Map(postTags.map(t => [t.tag, t.tagName]));
+questionTagsSet.forEach(tag => {
+  if (!allTagsMap.has(tag)) {
+    allTagsMap.set(tag, tag);
+  }
+});
+
+const tags = Array.from(allTagsMap.entries())
+  .map(([tag, tagName]) => ({ tag, tagName }))
+  .sort((a, b) => a.tag.localeCompare(b.tag));
 ---
 
 <Layout title={`Tags | ${SITE.title}`}>
