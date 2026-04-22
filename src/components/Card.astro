@@ -4,18 +4,25 @@ import { slugifyStr } from "@/utils/slugify";
 import { getPath } from "@/utils/getPath";
 import Datetime from "./Datetime.astro";
 
-type Props = {
+export interface Props {
   variant?: "h2" | "h3";
-} & CollectionEntry<"blog">;
+  id: string;
+  data: any;
+  filePath?: string;
+  collection: "blog" | "questions";
+}
 
-const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+const { variant: Heading = "h2", id, data, filePath, collection } = Astro.props;
 
-const { title, description, ...props } = data;
+const isBlogPost = collection === "blog";
+const title = isBlogPost ? data.title : data.question;
+const description = isBlogPost ? data.description : data.answer;
+const href = isBlogPost ? getPath(id, filePath) : `/questions/${id}`;
 ---
 
 <li class="my-6">
   <a
-    href={getPath(id, filePath)}
+    href={href}
     class:list={[
       "inline-block text-lg font-medium text-accent",
       "decoration-dashed underline-offset-4 hover:underline",
@@ -28,6 +35,6 @@ const { title, description, ...props } = data;
       {title}
     </Heading>
   </a>
-  <Datetime {...props} />
+  <Datetime pubDatetime={data.pubDatetime} modDatetime={isBlogPost ? data.modDatetime : undefined} />
   <p>{description}</p>
 </li>

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
-import type { GetStaticPathsOptions } from "astro";
+import type { GetStaticPathsOptions, Page } from "astro";
+import type { CollectionEntry } from "astro:content";
 import Main from "@/layouts/Main.astro";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
@@ -9,16 +10,49 @@ import Card from "@/components/Card.astro";
 import Pagination from "@/components/Pagination.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
 import getPostsByTag from "@/utils/getPostsByTag";
+import { slugifyAll, slugifyStr } from "@/utils/slugify";
 import { SITE } from "@/config";
+
+type ContentEntry = CollectionEntry<"blog"> | CollectionEntry<"questions">;
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const posts = await getCollection("blog");
-  const tags = getUniqueTags(posts);
+  const questions = await getCollection("questions");
 
-  return tags.flatMap(({ tag, tagName }) => {
+  // Get unique tags from both posts and questions
+  const postTags = getUniqueTags(posts);
+  const questionTagsSet = new Set<string>();
+
+  questions.forEach(q => {
+    q.data.tags.forEach(tag => {
+      questionTagsSet.add(slugifyStr(tag));
+    });
+  });
+
+  // Merge tags from both collections
+  const allTagsMap = new Map(postTags.map(t => [t.tag, t.tagName]));
+  questionTagsSet.forEach(tag => {
+    if (!allTagsMap.has(tag)) {
+      allTagsMap.set(tag, tag);
+    }
+  });
+
+  const allTags = Array.from(allTagsMap.entries()).map(([tag, tagName]) => ({
+    tag,
+    tagName,
+  }));
+
+  return allTags.flatMap(({ tag, tagName }) => {
     const tagPosts = getPostsByTag(posts, tag);
+    const tagQuestions = questions.filter(q =>
+      slugifyAll(q.data.tags).includes(tag)
+    );
 
-    return paginate(tagPosts, {
+    const allContent: ContentEntry[] = [...tagPosts, ...tagQuestions].sort(
+      (a, b) => b.data.pubDatetime.valueOf() - a.data.pubDatetime.valueOf()
+    );
+
+    return paginate(allContent, {
       params: { tag },
       props: { tagName },
       pageSize: SITE.postPerPage,
@@ -28,7 +62,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
 const params = Astro.params;
 const { tag } = params;
-const { page, tagName } = Astro.props;
+const { page, tagName } = Astro.props as { page: Page<ContentEntry>; tagName: string };
 ---
 
 <Layout title={`Tag: ${tagName} | ${SITE.title}`}>
