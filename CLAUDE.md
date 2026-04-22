@@ -1,5 +1,9 @@
 # Study Website (Astro Blog) - AI Assistant Guidelines
 
+> Documentation hub: [./.clade/INDEX.md](./.clade/INDEX.md)
+> 
+> Chi tiết rules/business/architecture đã được tách vào `.clade/` để dễ maintain và tham chiếu.
+
 ## 1. Project Context
 This is a personal blog and study website built using the **Astro** framework. The goal is to post technical blogs and study notes, with a UI inspired by `sagarshiroya.dev`.
 
@@ -34,3 +38,85 @@ This is a personal blog and study website built using the **Astro** framework. T
 - Excellent responsive layouts.
 - Unobtrusive light/dark mode.
 - Structured code blocks with proper syntax highlighting.
+
+## 7. Content Generation Rules (Blog & Questions)
+### 7.1 Source of truth
+- Always follow schema in `src/content.config.ts`.
+- Current content paths:
+  - Blog: `src/data/blog/*.md`
+  - Questions: `src/data/questions/*.md`
+
+### 7.2 Blog frontmatter rules
+- Required:
+  - `title` (string)
+  - `description` (string)
+  - `pubDatetime` (ISO 8601, UTC)
+  - `tags` (string[])
+- Recommended:
+  - `author`
+  - `featured`
+  - `draft`
+- Optional:
+  - `modDatetime`
+  - `ogImage`
+  - `canonicalURL`
+  - `hideEditPost`
+  - `timezone`
+
+### 7.3 Questions frontmatter rules
+- Required:
+  - `question` (string)
+  - `answer` (string)
+  - `pubDatetime` (ISO 8601, UTC)
+- Recommended:
+  - `tags` (string[])
+  - `featured`
+
+### 7.4 Formatting conventions
+- Use `ISO 8601` UTC datetime, example: `2026-04-22T00:00:00Z`.
+- Use lowercase kebab-case tags whenever possible.
+- Keep blog `description` concise (1–2 sentences).
+- In questions:
+  - `question` = list/detail title
+  - `answer` = concise main answer
+  - markdown body = extended explanation (optional)
+
+### 7.5 Copy-paste templates
+#### Blog template
+```md
+---
+title: "Your blog title"
+pubDatetime: 2026-04-22T00:00:00Z
+description: "One or two concise sentences describing the post."
+author: "Hoan K"
+tags:
+  - "system-design"
+  - "architecture"
+featured: false
+draft: false
+---
+
+Your blog content here.
+```
+
+#### Question template
+```md
+---
+question: "Your question here?"
+answer: "Short direct answer here."
+tags: ["tag-1", "tag-2"]
+pubDatetime: 2026-04-22T00:00:00Z
+featured: false
+---
+
+Optional extended explanation in markdown.
+```
+
+### 7.6 Validation checklist before merge
+- Run `npm run build`.
+- Verify:
+  - `/posts` shows new blog
+  - `/questions` shows new question and detail page works
+  - `/tags` includes tags from both blog and questions
+  - `/tags/<tag>` resolves without 404 and shows related content
+- If schema errors appear, re-check `src/content.config.ts` first.
