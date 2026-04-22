@@ -32,15 +32,6 @@ const sortedQuestions = questions.sort(
                   class="block rounded-lg border border-border p-4 transition-colors hover:border-accent hover:bg-accent/5"
                 >
                   <h2 class="text-lg font-medium">{data.question}</h2>
-                  {data.tags.length > 0 && (
-                    <div class="mt-2 flex flex-wrap gap-2">
-                      {data.tags.map(tag => (
-                        <span class="rounded-full bg-accent/10 px-2 py-0.5 text-xs text-accent">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                 </a>
               </li>
             ))}
