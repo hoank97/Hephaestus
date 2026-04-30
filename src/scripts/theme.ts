@@ -5,15 +5,22 @@ const DARK = "dark";
 
 // Initial color scheme
 // Can be "light", "dark", or empty string for system's prefers-color-scheme
-const initialColorScheme = "light";
+const initialColorScheme = LIGHT;
 
-function getPreferTheme(): string {
+type Theme = typeof LIGHT | typeof DARK;
+
+function isTheme(value: string | null | undefined): value is Theme {
+  return value === LIGHT || value === DARK;
+}
+
+function getPreferTheme(): Theme {
   // get theme data from local storage (user's explicit choice)
   const currentTheme = localStorage.getItem(THEME);
-  if (currentTheme) return currentTheme;
+  if (isTheme(currentTheme)) return currentTheme;
+  if (currentTheme) localStorage.removeItem(THEME);
 
   // return initial color scheme if it is set (site default)
-  if (initialColorScheme) return initialColorScheme;
+  if (isTheme(initialColorScheme)) return initialColorScheme;
 
   // return user device's prefer color scheme (system fallback)
   return window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -22,7 +29,16 @@ function getPreferTheme(): string {
 }
 
 // Use existing theme value from inline script if available, otherwise detect
-let themeValue = window.theme?.themeValue ?? getPreferTheme();
+let themeValue = isTheme(window.theme?.themeValue)
+  ? window.theme.themeValue
+  : getPreferTheme();
+
+function setTheme(val: string): void {
+  themeValue = isTheme(val) ? val : getPreferTheme();
+  if (window.theme) {
+    window.theme.themeValue = themeValue;
+  }
+}
 
 function setPreference(): void {
   localStorage.setItem(THEME, themeValue);
@@ -32,7 +48,12 @@ function setPreference(): void {
 function reflectPreference(): void {
   document.firstElementChild?.setAttribute("data-theme", themeValue);
 
-  document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
+  document
+    .querySelector("#theme-btn")
+    ?.setAttribute(
+      "aria-label",
+      `Switch to ${themeValue === LIGHT ? DARK : LIGHT} theme`
+    );
 
   // Get a reference to the body element
   const body = document.body;
@@ -54,6 +75,9 @@ function reflectPreference(): void {
 
 // Update the global theme API
 if (window.theme) {
+  window.theme.themeValue = themeValue;
+  window.theme.getTheme = () => themeValue;
+  window.theme.setTheme = setTheme;
   window.theme.setPreference = setPreference;
   window.theme.reflectPreference = reflectPreference;
 } else {
@@ -62,9 +86,7 @@ if (window.theme) {
     setPreference,
     reflectPreference,
     getTheme: () => themeValue,
-    setTheme: (val: string) => {
-      themeValue = val;
-    },
+    setTheme,
   };
 }
 
@@ -76,7 +98,13 @@ function setThemeFeature(): void {
   reflectPreference();
 
   // now this script can find and listen for clicks on the control
-  document.querySelector("#theme-btn")?.addEventListener("click", () => {
+  const themeBtn = document.querySelector("#theme-btn");
+  if (!themeBtn || themeBtn.getAttribute("data-theme-listener") === "true") {
+    return;
+  }
+
+  themeBtn.setAttribute("data-theme-listener", "true");
+  themeBtn.addEventListener("click", () => {
     themeValue = themeValue === LIGHT ? DARK : LIGHT;
     window.theme?.setTheme(themeValue);
     setPreference();
@@ -103,4 +131,3 @@ document.addEventListener("astro:before-swap", event => {
       ?.setAttribute("content", bgColor);
   }
 });
-

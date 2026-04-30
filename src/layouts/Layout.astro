@@ -142,12 +142,17 @@ const structuredData = {
     <!-- Minimal inline script to prevent FOUC - sets theme immediately -->
     <script is:inline>
       (function () {
-        const initialColorScheme = ""; // "light" | "dark"
+        const initialColorScheme = "light"; // "light" | "dark" | ""
         const currentTheme = localStorage.getItem("theme");
 
+        function isTheme(value) {
+          return value === "light" || value === "dark";
+        }
+
         function getPreferTheme() {
-          if (currentTheme) return currentTheme;
-          if (initialColorScheme) return initialColorScheme;
+          if (isTheme(currentTheme)) return currentTheme;
+          if (currentTheme) localStorage.removeItem("theme");
+          if (isTheme(initialColorScheme)) return initialColorScheme;
           return window.matchMedia("(prefers-color-scheme: dark)").matches
             ? "dark"
             : "light";
@@ -163,7 +168,9 @@ const structuredData = {
           themeValue: themeValue,
           getTheme: () => window.theme.themeValue,
           setTheme: val => {
-            window.theme.themeValue = val;
+            if (isTheme(val)) {
+              window.theme.themeValue = val;
+            }
           },
         };
       })();
@@ -249,7 +256,10 @@ const structuredData = {
         const newDark = document.documentElement.dataset.theme === "dark";
         applyTheme(newDark);
       });
-      observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+      });
 
       document.addEventListener("astro:page-load", () => {
         renderMermaidBlocks();
