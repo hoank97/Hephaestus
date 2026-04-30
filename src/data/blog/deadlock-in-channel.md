@@ -4,7 +4,7 @@ description: "Deadlock = all goroutines blocked on channels with no way forward.
 tags: ["go"]
 pubDatetime: 2026-04-22T10:54:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Common Causes

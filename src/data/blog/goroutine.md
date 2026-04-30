@@ -4,7 +4,7 @@ description: "Goroutine is a lightweight function managed by Go runtime (~2KB st
 tags: ["go"]
 pubDatetime: 2026-04-22T10:52:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Core Difference

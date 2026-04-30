@@ -9,7 +9,7 @@ tags:
   - "kafka"
   - "microservices"
 featured: true
-draft: false
+draft: true
 ---
 
 Event-driven architecture reduces coupling between services, but poor design creates systems that are hard to debug and inconsistent.

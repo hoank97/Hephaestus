@@ -9,7 +9,7 @@ tags:
   - "distributed-systems"
   - "high-availability"
 featured: true
-draft: false
+draft: true
 ---
 
 Global applications need low latency everywhere and resilience when a region fails. Active-active architecture can provide both, but it is significantly more complex than active-passive.

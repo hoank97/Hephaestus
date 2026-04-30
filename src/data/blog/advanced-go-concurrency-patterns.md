@@ -10,7 +10,7 @@ tags:
   - "patterns"
   - "architecture"
 featured: true
-draft: false
+draft: true
 ---
 
 Basic goroutines and channels are easy. Building production-grade concurrent systems that handle backpressure, partial failures, and resource limits is hard.

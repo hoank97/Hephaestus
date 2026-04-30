@@ -4,7 +4,7 @@ description: "Monolith: simpler dev/deploy, better performance, ACID transaction
 tags: ["architecture"]
 pubDatetime: 2026-04-22T11:00:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Core Trade-off

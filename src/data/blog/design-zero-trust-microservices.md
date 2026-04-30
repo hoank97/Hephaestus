@@ -9,7 +9,7 @@ tags:
   - "zero-trust"
   - "microservices"
 featured: true
-draft: false
+draft: true
 ---
 
 "Internal network = trusted" is outdated. Zero Trust assumes every request must be authenticated, authorized, and audited.

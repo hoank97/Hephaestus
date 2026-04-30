@@ -4,7 +4,7 @@ description: "REST uses multiple endpoints with fixed data structures, while Gra
 tags: ["rest", "graphql", "api"]
 pubDatetime: 2026-04-22T09:00:00Z
 featured: true
-draft: false
+draft: true
 ---
 
 REST (Representational State Transfer) and GraphQL are both API architectural styles, but they differ significantly:

@@ -10,7 +10,7 @@ tags:
   - "architecture"
   - "search"
 featured: true
-draft: false
+draft: true
 ---
 
 RAG (Retrieval-Augmented Generation) is the foundation of most enterprise AI applications. The biggest challenge isn't the demo—it's running it reliably for multiple tenants simultaneously.

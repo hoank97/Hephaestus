@@ -4,7 +4,7 @@ description: "Use horizontal scaling with auto-scaling groups, implement caching
 tags: ["system-design", "scalability", "performance", "architecture"]
 pubDatetime: 2026-04-22T10:53:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Key Strategies for Peak-Time Scaling

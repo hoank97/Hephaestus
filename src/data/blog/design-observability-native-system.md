@@ -9,7 +9,7 @@ tags:
   - "monitoring"
   - "sre"
 featured: true
-draft: false
+draft: true
 ---
 
 In distributed systems, poor observability turns every incident into guesswork. Observability-native architecture makes production behavior explainable.

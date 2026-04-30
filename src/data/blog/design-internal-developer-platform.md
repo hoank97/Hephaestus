@@ -9,7 +9,7 @@ tags:
   - "devops"
   - "developer-experience"
 featured: true
-draft: false
+draft: true
 ---
 
 As engineering organizations scale, teams cannot keep reinventing CI/CD, infra, security, and observability. An IDP provides a self-service golden path.

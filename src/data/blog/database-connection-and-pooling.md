@@ -10,7 +10,7 @@ tags:
   - "optimization"
   - "system-design"
 featured: true
-draft: false
+draft: true
 canonicalURL: "https://sagarshiroya.dev/posts/database-connection-and-pooling"
 ---
 

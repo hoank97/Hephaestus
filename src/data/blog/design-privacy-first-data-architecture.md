@@ -10,7 +10,7 @@ tags:
   - "security"
   - "compliance"
 featured: true
-draft: false
+draft: true
 ---
 
 In modern AI/data products, privacy is both a legal and architectural concern. Privacy-first design protects users and reduces long-term compliance risk.

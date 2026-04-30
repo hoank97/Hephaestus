@@ -9,7 +9,7 @@ tags:
   - "cost-optimization"
   - "architecture"
 featured: true
-draft: false
+draft: true
 ---
 
 A system can be fast and reliable but still economically broken. FinOps-aware design treats cost as a first-class engineering constraint.

@@ -4,7 +4,7 @@ description: "Unbuffered channel (`make(chan T)`) blocks sender until receiver i
 tags: ["go"]
 pubDatetime: 2026-04-22T11:06:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Core Difference

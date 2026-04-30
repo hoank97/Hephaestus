@@ -10,7 +10,7 @@ tags:
   - "runtime"
   - "optimization"
 featured: true
-draft: false
+draft: true
 ---
 
 At small scale, Go's scheduler feels magical: you write goroutines, and things "just work." At scale, scheduler behavior directly impacts throughput, tail latency, and cost.

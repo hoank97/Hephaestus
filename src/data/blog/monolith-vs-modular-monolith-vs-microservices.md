@@ -4,7 +4,7 @@ description: "Start with a monolith. Split into a modular monolith as the codeba
 tags: ["system-design", "architecture", "microservices", "monolith"]
 pubDatetime: 2026-04-30T00:00:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Decision Framework: Monolith vs Modular Monolith vs Microservices

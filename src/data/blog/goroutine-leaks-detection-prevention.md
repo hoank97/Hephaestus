@@ -10,7 +10,7 @@ tags:
   - "performance"
   - "concurrency"
 featured: true
-draft: false
+draft: true
 ---
 
 Goroutines are cheap, but not free. In real production systems, goroutine leaks are one of the most dangerous failure modes because they often look harmless at first, then slowly turn into memory pressure, scheduler contention, and eventually outages.

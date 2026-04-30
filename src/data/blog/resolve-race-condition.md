@@ -4,7 +4,7 @@ description: "Use synchronization primitives to protect shared state: `sync.Mute
 tags: ["go"]
 pubDatetime: 2026-04-22T11:02:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Detect First

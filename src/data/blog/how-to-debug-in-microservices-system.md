@@ -4,7 +4,7 @@ description: "Use distributed tracing (Jaeger, Zipkin), centralized logging (ELK
 tags: ["microservices", "debugging", "observability", "distributed-systems"]
 pubDatetime: 2026-04-22T10:55:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Key Debugging Strategies for Microservices

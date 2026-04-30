@@ -4,7 +4,7 @@ description: "N+1 happens when you fetch a list with 1 query, then execute N ext
 tags: ["database"]
 pubDatetime: 2026-04-22T11:04:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Why It Hurts

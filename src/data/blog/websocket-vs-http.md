@@ -4,7 +4,7 @@ description: "HTTP is request-response (client initiates, ~500B header overhead 
 tags: ["networking"]
 pubDatetime: 2026-04-22T10:43:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Core Trade-off

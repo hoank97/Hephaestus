@@ -4,7 +4,7 @@ description: "Channel is Go's typed conduit for goroutine communication. Use for
 tags: ["go"]
 pubDatetime: 2026-04-22T10:50:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Core Concept

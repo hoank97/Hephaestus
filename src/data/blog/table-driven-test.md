@@ -4,7 +4,7 @@ description: "Table-driven test = define test cases as slice of structs (input +
 tags: ["testing"]
 pubDatetime: 2026-04-22T10:58:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Basic Pattern

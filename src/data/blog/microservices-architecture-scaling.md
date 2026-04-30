@@ -4,7 +4,7 @@ description: "Service decomposition by business domain, independent deployment/s
 tags: ["microservices"]
 pubDatetime: 2026-04-22T10:45:00Z
 featured: false
-draft: false
+draft: true
 ---
 
 ## Core Principles

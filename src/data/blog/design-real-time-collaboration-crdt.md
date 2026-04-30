@@ -10,7 +10,7 @@ tags:
   - "collaboration"
   - "websocket"
 featured: true
-draft: false
+draft: true
 ---
 
 Real-time collaboration is a hard problem: multiple people editing simultaneously, working offline, automatic merge without data loss.
