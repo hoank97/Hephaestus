@@ -1,8 +1,8 @@
 ---
-title: "Queues, Streams, or Direct calls?"
+title: "Message Queues vs Event Streams vs Direct Calls"
 description: "Direct calls, message queues, and event streams each solve different problems. The right choice depends on coupling tolerance, reliability requirements, throughput needs, and whether you need ordering, replay, or real-time fan-out."
 tags: ["system-design", "architecture", "distributed-systems", "messaging"]
-pubDatetime: 2026-04-30T00:00:00Z
+pubDatetime: 2026-04-30T14:37:00Z
 featured: false
 draft: false
 ---
