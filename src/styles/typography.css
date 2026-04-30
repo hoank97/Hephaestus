@@ -52,6 +52,10 @@
     }
 
     table {
+      @apply block max-w-full overflow-x-auto whitespace-nowrap;
+
+      -webkit-overflow-scrolling: touch;
+
       th,
       td {
         @apply border border-border p-2;
