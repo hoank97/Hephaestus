@@ -104,11 +104,3 @@ document.addEventListener("astro:before-swap", event => {
   }
 });
 
-// sync with system changes
-window
-  .matchMedia("(prefers-color-scheme: dark)")
-  .addEventListener("change", ({ matches: isDark }) => {
-    themeValue = isDark ? DARK : LIGHT;
-    window.theme?.setTheme(themeValue);
-    setPreference();
-  });

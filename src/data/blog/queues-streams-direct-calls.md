@@ -48,9 +48,9 @@ sequenceDiagram
 
 ---
 
-### 2. Message Queues (Asynchronous, Point-to-Point)
+### 2. Message Queues (Asynchronous)
 
-A producer sends a message to a queue. A consumer picks it up and processes it. Each message is delivered to exactly one consumer.
+A producer sends a message to a queue. Consumers pick up and process messages. Supports both point-to-point (one consumer per message) and pub/sub patterns (multiple consumers via exchanges/topics).
 
 **When to use:**
 - You want to decouple sender from receiver
