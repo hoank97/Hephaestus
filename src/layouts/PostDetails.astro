@@ -99,7 +99,7 @@ const nextPost =
 
     <BackToTopButton />
 
-    <ShareLinks />
+    <ShareLinks url={new URL(getPath(post.id, post.filePath), Astro.site ?? Astro.url)} />
 
     <hr class="my-6 border-dashed" />
 

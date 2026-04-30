@@ -1,5 +1,5 @@
 export const SITE = {
-  website: "https://localhost:4321/", // replace this with your deployed domain
+  website: "https://hoank.dev/", // replace this with your deployed domain
   author: "Hoan K",
   profile: "https://github.com/hoank",
   desc: "Personal portfolio and technical blog.",
