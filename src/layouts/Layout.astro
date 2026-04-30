@@ -174,5 +174,75 @@ const structuredData = {
 
     <!-- Load full theme logic -->
     <script src="../scripts/theme.ts"></script>
+
+    <!-- Mermaid diagram rendering -->
+    <script>
+      import mermaid from "mermaid";
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: "base",
+        themeVariables: {
+          primaryColor: "#e0e7ff",
+          primaryTextColor: "#1e293b",
+          primaryBorderColor: "#6366f1",
+          lineColor: "#64748b",
+          secondaryColor: "#f1f5f9",
+          tertiaryColor: "#f8fafc",
+        },
+      });
+
+      function applyTheme(isDark: boolean) {
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: "base",
+          themeVariables: {
+            primaryColor: isDark ? "#312e81" : "#e0e7ff",
+            primaryTextColor: isDark ? "#e2e8f0" : "#1e293b",
+            primaryBorderColor: isDark ? "#818cf8" : "#6366f1",
+            lineColor: isDark ? "#94a3b8" : "#64748b",
+            secondaryColor: isDark ? "#1e293b" : "#f1f5f9",
+            tertiaryColor: isDark ? "#0f172a" : "#f8fafc",
+          },
+        });
+      }
+
+      function renderMermaidBlocks() {
+        const blocks = document.querySelectorAll("pre code.language-mermaid");
+        blocks.forEach(async (codeEl) => {
+          const preEl = codeEl.parentElement as HTMLElement;
+          if (preEl.dataset.mermaidRendered) return;
+
+          const code = codeEl.textContent ?? "";
+          const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
+
+          try {
+            const { svg } = await mermaid.render(id, code);
+            const wrapper = document.createElement("div");
+            wrapper.className = "mermaid";
+            wrapper.innerHTML = svg;
+            preEl.replaceWith(wrapper);
+            preEl.dataset.mermaidRendered = "true";
+          } catch (e) {
+            console.error("Mermaid render error:", e);
+          }
+        });
+      }
+
+      const isDark = document.documentElement.dataset.theme === "dark";
+      applyTheme(isDark);
+      renderMermaidBlocks();
+
+      // Re-render on theme change and page navigation
+      const observer = new MutationObserver(() => {
+        const newDark = document.documentElement.dataset.theme === "dark";
+        applyTheme(newDark);
+      });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+      document.addEventListener("astro:page-load", () => {
+        renderMermaidBlocks();
+      });
+    </script>
   </body>
 </html>
