@@ -59,6 +59,7 @@ This is a personal blog and study website built using the **Astro** framework. T
 - Use `ISO 8601` UTC datetime, example: `2026-04-22T00:00:00Z`.
 - Use lowercase kebab-case tags whenever possible.
 - Keep `description` concise (1–2 sentences).
+- **Always set `pubDatetime` to today's date** (UTC) when creating a new blog post. Do not leave it blank or as a placeholder.
 
 ### 7.4 Copy-paste template
 ```md

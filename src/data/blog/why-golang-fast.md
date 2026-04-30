@@ -1,11 +1,8 @@
 ---
 title: "Why Go is Fast"
 description: "Go's performance isn't accidental. It's the result of deliberate design decisions around memory allocation, goroutines, and compiler optimizations that trade developer convenience for runtime efficiency."
-tags:
-  - "golang"
-  - "performance"
-  - "systems-programming"
-pubDatetime: 2026-04-30T00:00:00Z
+tags: ["go"]
+pubDatetime: 2026-04-30T16:50:00Z
 featured: false
 draft: false
 ---
