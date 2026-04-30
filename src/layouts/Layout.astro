@@ -177,23 +177,30 @@ const structuredData = {
 
     <!-- Mermaid diagram rendering -->
     <script>
-      import mermaid from "mermaid";
+      let mermaid: any;
 
-      mermaid.initialize({
-        startOnLoad: false,
-        theme: "base",
-        themeVariables: {
-          primaryColor: "#e0e7ff",
-          primaryTextColor: "#1e293b",
-          primaryBorderColor: "#6366f1",
-          lineColor: "#64748b",
-          secondaryColor: "#f1f5f9",
-          tertiaryColor: "#f8fafc",
-        },
-      });
+      async function loadMermaid() {
+        if (!mermaid) {
+          mermaid = (await import("mermaid")).default;
+          mermaid.initialize({
+            startOnLoad: false,
+            theme: "base",
+            themeVariables: {
+              primaryColor: "#e0e7ff",
+              primaryTextColor: "#1e293b",
+              primaryBorderColor: "#6366f1",
+              lineColor: "#64748b",
+              secondaryColor: "#f1f5f9",
+              tertiaryColor: "#f8fafc",
+            },
+          });
+        }
+        return mermaid;
+      }
 
-      function applyTheme(isDark: boolean) {
-        mermaid.initialize({
+      async function applyTheme(isDark: boolean) {
+        const m = await loadMermaid();
+        m.initialize({
           startOnLoad: false,
           theme: "base",
           themeVariables: {
@@ -207,17 +214,21 @@ const structuredData = {
         });
       }
 
-      function renderMermaidBlocks() {
+      async function renderMermaidBlocks() {
         const blocks = document.querySelectorAll("pre code.language-mermaid");
-        blocks.forEach(async (codeEl) => {
+        if (blocks.length === 0) return;
+
+        const m = await loadMermaid();
+
+        for (const codeEl of Array.from(blocks)) {
           const preEl = codeEl.parentElement as HTMLElement;
-          if (preEl.dataset.mermaidRendered) return;
+          if (preEl.dataset.mermaidRendered) continue;
 
           const code = codeEl.textContent ?? "";
           const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
 
           try {
-            const { svg } = await mermaid.render(id, code);
+            const { svg } = await m.render(id, code);
             const wrapper = document.createElement("div");
             wrapper.className = "mermaid";
             wrapper.innerHTML = svg;
@@ -226,7 +237,7 @@ const structuredData = {
           } catch (e) {
             console.error("Mermaid render error:", e);
           }
-        });
+        }
       }
 
       const isDark = document.documentElement.dataset.theme === "dark";
