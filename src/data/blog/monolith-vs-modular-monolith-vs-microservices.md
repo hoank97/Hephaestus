@@ -140,4 +140,4 @@ Focus: Extract modules with clear boundaries into services
 
 The default choice should always be the simplest architecture that meets your current needs. Most teams should start with a **monolith**, evolve to a **modular monolith** as complexity grows, and only adopt **microservices** when the team size, product maturity, and operational capabilities justify the significant additional complexity.
 
-> "You should start with a monolith, and split it when you have a good reason to, not a bad one." — Martin Fowler
+> You should start with a monolith, and split it when you have a good reason to, not a bad one. — Martin Fowler
