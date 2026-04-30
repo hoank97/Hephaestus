@@ -1,9 +1,10 @@
 ---
-question: "How do you implement tests in Go?"
-answer: "Tests live in `*_test.go` files with `TestXxx(t *testing.T)` functions. Run with `go test`. Use table-driven tests for multiple cases, `t.Run()` for subtests, and `-race` flag to detect concurrency bugs."
+title: "How do you implement tests in Go?"
+description: "Tests live in `*_test.go` files with `TestXxx(t *testing.T)` functions. Run with `go test`. Use table-driven tests for multiple cases, `t.Run()` for subtests, and `-race` flag to detect concurrency bugs."
 tags: ["testing"]
 pubDatetime: 2026-04-22T10:56:00Z
 featured: false
+draft: false
 ---
 
 ## Basic Structure

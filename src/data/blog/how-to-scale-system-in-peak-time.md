@@ -1,9 +1,10 @@
 ---
-question: "How to scale the system in the peak time correctly?"
-answer: "Use horizontal scaling with auto-scaling groups, implement caching layers, employ load balancing, optimize database queries, and use CDNs for static content. Monitor metrics to trigger scaling events before capacity is reached."
+title: "How to scale the system in the peak time correctly?"
+description: "Use horizontal scaling with auto-scaling groups, implement caching layers, employ load balancing, optimize database queries, and use CDNs for static content. Monitor metrics to trigger scaling events before capacity is reached."
 tags: ["system-design", "scalability", "performance", "architecture"]
 pubDatetime: 2026-04-22T10:53:00Z
 featured: false
+draft: false
 ---
 
 ## Key Strategies for Peak-Time Scaling

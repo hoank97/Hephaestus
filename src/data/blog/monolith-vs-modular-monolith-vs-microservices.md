@@ -1,9 +1,10 @@
 ---
-question: "How do you decide between a monolith, modular monolith, and microservices for a new system?"
-answer: "Start with a monolith. Split into a modular monolith as the codebase grows. Move to microservices only when you have proven team scaling needs, independent deployability requirements, and the operational maturity to support distributed systems."
+title: "How do you decide between a monolith, modular monolith, and microservices for a new system?"
+description: "Start with a monolith. Split into a modular monolith as the codebase grows. Move to microservices only when you have proven team scaling needs, independent deployability requirements, and the operational maturity to support distributed systems."
 tags: ["system-design", "architecture", "microservices", "monolith"]
 pubDatetime: 2026-04-30T00:00:00Z
 featured: false
+draft: false
 ---
 
 ## Decision Framework: Monolith vs Modular Monolith vs Microservices

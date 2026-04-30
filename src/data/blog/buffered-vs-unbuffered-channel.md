@@ -1,9 +1,10 @@
 ---
-question: "What is the difference between buffered and unbuffered channels in Go?"
-answer: "Unbuffered channel (`make(chan T)`) blocks sender until receiver is ready (synchronous handoff). Buffered channel (`make(chan T, n)`) allows sends until buffer is full (asynchronous up to capacity). Unbuffered gives strict synchronization; buffered gives higher throughput but weaker timing guarantees."
+title: "What is the difference between buffered and unbuffered channels in Go?"
+description: "Unbuffered channel (`make(chan T)`) blocks sender until receiver is ready (synchronous handoff). Buffered channel (`make(chan T, n)`) allows sends until buffer is full (asynchronous up to capacity). Unbuffered gives strict synchronization; buffered gives higher throughput but weaker timing guarantees."
 tags: ["go"]
 pubDatetime: 2026-04-22T11:06:00Z
 featured: false
+draft: false
 ---
 
 ## Core Difference

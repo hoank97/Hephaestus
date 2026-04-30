@@ -1,9 +1,10 @@
 ---
-question: "Compare WebSocket vs. HTTP"
-answer: "HTTP is request-response (client initiates, ~500B header overhead per request). WebSocket is full-duplex persistent connection (~2-14B frame overhead). Use HTTP for CRUD/APIs. Use WebSocket when server must push frequently or sub-second latency required."
+title: "Compare WebSocket vs. HTTP"
+description: "HTTP is request-response (client initiates, ~500B header overhead per request). WebSocket is full-duplex persistent connection (~2-14B frame overhead). Use HTTP for CRUD/APIs. Use WebSocket when server must push frequently or sub-second latency required."
 tags: ["networking"]
 pubDatetime: 2026-04-22T10:43:00Z
 featured: false
+draft: false
 ---
 
 ## Core Trade-off

@@ -1,28 +1,28 @@
 ---
-import type { CollectionEntry } from "astro:content";
 import { slugifyStr } from "@/utils/slugify";
 import { getPath } from "@/utils/getPath";
 import Datetime from "./Datetime.astro";
 
+interface CardData {
+  title: string;
+  description: string;
+  pubDatetime: Date;
+  modDatetime?: Date | null;
+}
+
 export interface Props {
   variant?: "h2" | "h3";
   id: string;
-  data: any;
+  data: CardData;
   filePath?: string;
-  collection: "blog" | "questions";
 }
 
-const { variant: Heading = "h2", id, data, filePath, collection } = Astro.props;
-
-const isBlogPost = collection === "blog";
-const title = isBlogPost ? data.title : data.question;
-const description = isBlogPost ? data.description : data.answer;
-const href = isBlogPost ? getPath(id, filePath) : `/questions/${id}`;
+const { variant: Heading = "h2", id, data, filePath } = Astro.props;
 ---
 
 <li class="my-6">
   <a
-    href={href}
+    href={getPath(id, filePath)}
     class:list={[
       "inline-block text-lg font-medium text-accent",
       "decoration-dashed underline-offset-4 hover:underline",
@@ -30,11 +30,11 @@ const href = isBlogPost ? getPath(id, filePath) : `/questions/${id}`;
     ]}
   >
     <Heading
-      style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
+      style={{ viewTransitionName: slugifyStr(data.title.replaceAll(".", "-")) }}
     >
-      {title}
+      {data.title}
     </Heading>
   </a>
-  <Datetime pubDatetime={data.pubDatetime} modDatetime={isBlogPost ? data.modDatetime : undefined} />
-  <p>{description}</p>
+  <Datetime pubDatetime={data.pubDatetime} modDatetime={data.modDatetime} />
+  <p>{data.description}</p>
 </li>

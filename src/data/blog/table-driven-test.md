@@ -1,9 +1,10 @@
 ---
-question: "What is a table-driven test in Go?"
-answer: "Table-driven test = define test cases as slice of structs (input + expected output), iterate with t.Run(). Reduces duplication, easy to add cases, improves readability. Idiomatic Go testing pattern."
+title: "What is a table-driven test in Go?"
+description: "Table-driven test = define test cases as slice of structs (input + expected output), iterate with t.Run(). Reduces duplication, easy to add cases, improves readability. Idiomatic Go testing pattern."
 tags: ["testing"]
 pubDatetime: 2026-04-22T10:58:00Z
 featured: false
+draft: false
 ---
 
 ## Basic Pattern

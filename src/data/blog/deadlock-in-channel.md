@@ -1,9 +1,10 @@
 ---
-question: "What causes deadlock in Go channels and how do you avoid it?"
-answer: "Deadlock = all goroutines blocked on channels with no way forward. Causes: unbuffered send with no receiver, circular wait, forgotten close. Fix: balance senders/receivers, close from sender, use buffered channels, or select with timeout/default."
+title: "What causes deadlock in Go channels and how do you avoid it?"
+description: "Deadlock = all goroutines blocked on channels with no way forward. Causes: unbuffered send with no receiver, circular wait, forgotten close. Fix: balance senders/receivers, close from sender, use buffered channels, or select with timeout/default."
 tags: ["go"]
 pubDatetime: 2026-04-22T10:54:00Z
 featured: false
+draft: false
 ---
 
 ## Common Causes

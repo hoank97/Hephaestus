@@ -1,9 +1,10 @@
 ---
-question: "What are the pros and cons of Microservices vs Monolithic architecture?"
-answer: "Monolith: simpler dev/deploy, better performance, ACID transactions — but tight coupling, scales as unit. Microservices: independent scaling/deploy, fault isolation — but distributed complexity, eventual consistency, higher ops cost. Start monolith, extract services when team/domain/scaling demands it."
+title: "What are the pros and cons of Microservices vs Monolithic architecture?"
+description: "Monolith: simpler dev/deploy, better performance, ACID transactions — but tight coupling, scales as unit. Microservices: independent scaling/deploy, fault isolation — but distributed complexity, eventual consistency, higher ops cost. Start monolith, extract services when team/domain/scaling demands it."
 tags: ["architecture"]
 pubDatetime: 2026-04-22T11:00:00Z
 featured: false
+draft: false
 ---
 
 ## Core Trade-off

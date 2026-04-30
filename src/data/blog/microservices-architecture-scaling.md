@@ -1,9 +1,10 @@
 ---
-question: "What are the key considerations for Microservices Architecture & Scaling?"
-answer: "Service decomposition by business domain, independent deployment/scaling per service, distributed data management (database-per-service), async communication (message queues), observability (tracing/logging), and fault isolation (circuit breakers). Trade-off: operational complexity vs team autonomy."
+title: "What are the key considerations for Microservices Architecture & Scaling?"
+description: "Service decomposition by business domain, independent deployment/scaling per service, distributed data management (database-per-service), async communication (message queues), observability (tracing/logging), and fault isolation (circuit breakers). Trade-off: operational complexity vs team autonomy."
 tags: ["microservices"]
 pubDatetime: 2026-04-22T10:45:00Z
 featured: false
+draft: false
 ---
 
 ## Core Principles

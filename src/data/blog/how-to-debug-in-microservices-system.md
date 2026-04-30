@@ -1,9 +1,10 @@
 ---
-question: "How to debug in microservices system?"
-answer: "Use distributed tracing (Jaeger, Zipkin), centralized logging (ELK, Splunk), correlation IDs across services, service mesh observability, and APM tools. Implement structured logging and maintain consistent log formats across all services."
+title: "How to debug in microservices system?"
+description: "Use distributed tracing (Jaeger, Zipkin), centralized logging (ELK, Splunk), correlation IDs across services, service mesh observability, and APM tools. Implement structured logging and maintain consistent log formats across all services."
 tags: ["microservices", "debugging", "observability", "distributed-systems"]
 pubDatetime: 2026-04-22T10:55:00Z
 featured: false
+draft: false
 ---
 
 ## Key Debugging Strategies for Microservices

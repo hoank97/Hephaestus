@@ -1,9 +1,10 @@
 ---
-question: "What is a Goroutine and how does it differ from threads?"
-answer: "Goroutine is a lightweight function managed by Go runtime (~2KB stack vs 1-2MB for OS threads). Go multiplexes thousands of goroutines onto few OS threads (M:N scheduling). Cheaper to create, faster context switch, but requires explicit coordination to avoid leaks."
+title: "What is a Goroutine and how does it differ from threads?"
+description: "Goroutine is a lightweight function managed by Go runtime (~2KB stack vs 1-2MB for OS threads). Go multiplexes thousands of goroutines onto few OS threads (M:N scheduling). Cheaper to create, faster context switch, but requires explicit coordination to avoid leaks."
 tags: ["go"]
 pubDatetime: 2026-04-22T10:52:00Z
 featured: false
+draft: false
 ---
 
 ## Core Difference

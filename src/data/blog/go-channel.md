@@ -1,9 +1,10 @@
 ---
-question: "What is a Go channel and when should you use it?"
-answer: "Channel is Go's typed conduit for goroutine communication. Use for passing data between workers, signaling events, or coordinating concurrency. Prefer channels over shared memory when communication pattern is clear."
+title: "What is a Go channel and when should you use it?"
+description: "Channel is Go's typed conduit for goroutine communication. Use for passing data between workers, signaling events, or coordinating concurrency. Prefer channels over shared memory when communication pattern is clear."
 tags: ["go"]
 pubDatetime: 2026-04-22T10:50:00Z
 featured: false
+draft: false
 ---
 
 ## Core Concept

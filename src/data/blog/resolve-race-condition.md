@@ -1,9 +1,10 @@
 ---
-question: "How do you resolve race conditions in concurrent programming?"
-answer: "Use synchronization primitives to protect shared state: `sync.Mutex` for complex shared data, `sync/atomic` for simple counters/flags, channels for ownership transfer. Always detect with `go test -race` and fix data access paths, not symptoms."
+title: "How do you resolve race conditions in concurrent programming?"
+description: "Use synchronization primitives to protect shared state: `sync.Mutex` for complex shared data, `sync/atomic` for simple counters/flags, channels for ownership transfer. Always detect with `go test -race` and fix data access paths, not symptoms."
 tags: ["go"]
 pubDatetime: 2026-04-22T11:02:00Z
 featured: false
+draft: false
 ---
 
 ## Detect First

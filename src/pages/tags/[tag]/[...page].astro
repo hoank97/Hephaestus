@@ -10,49 +10,16 @@ import Card from "@/components/Card.astro";
 import Pagination from "@/components/Pagination.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
 import getPostsByTag from "@/utils/getPostsByTag";
-import { slugifyAll, slugifyStr } from "@/utils/slugify";
 import { SITE } from "@/config";
-
-type ContentEntry = CollectionEntry<"blog"> | CollectionEntry<"questions">;
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const posts = await getCollection("blog");
-  const questions = await getCollection("questions");
-
-  // Get unique tags from both posts and questions
-  const postTags = getUniqueTags(posts);
-  const questionTagsSet = new Set<string>();
-
-  questions.forEach(q => {
-    q.data.tags.forEach(tag => {
-      questionTagsSet.add(slugifyStr(tag));
-    });
-  });
-
-  // Merge tags from both collections
-  const allTagsMap = new Map(postTags.map(t => [t.tag, t.tagName]));
-  questionTagsSet.forEach(tag => {
-    if (!allTagsMap.has(tag)) {
-      allTagsMap.set(tag, tag);
-    }
-  });
-
-  const allTags = Array.from(allTagsMap.entries()).map(([tag, tagName]) => ({
-    tag,
-    tagName,
-  }));
+  const allTags = getUniqueTags(posts);
 
   return allTags.flatMap(({ tag, tagName }) => {
     const tagPosts = getPostsByTag(posts, tag);
-    const tagQuestions = questions.filter(q =>
-      slugifyAll(q.data.tags).includes(tag)
-    );
 
-    const allContent: ContentEntry[] = [...tagPosts, ...tagQuestions].sort(
-      (a, b) => b.data.pubDatetime.valueOf() - a.data.pubDatetime.valueOf()
-    );
-
-    return paginate(allContent, {
+    return paginate(tagPosts, {
       params: { tag },
       props: { tagName },
       pageSize: SITE.postPerPage,
@@ -62,7 +29,10 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
 const params = Astro.params;
 const { tag } = params;
-const { page, tagName } = Astro.props as { page: Page<ContentEntry>; tagName: string };
+const { page, tagName } = Astro.props as {
+  page: Page<CollectionEntry<"blog">>;
+  tagName: string
+};
 ---
 
 <Layout title={`Tag: ${tagName} | ${SITE.title}`}>
@@ -70,11 +40,13 @@ const { page, tagName } = Astro.props as { page: Page<ContentEntry>; tagName: st
   <Main
     pageTitle={[`Tag:`, `${tagName}`]}
     titleTransition={tag}
-    pageDesc={`All posts and questions with the tag "${tagName}".`}
+    pageDesc={`All posts with the tag "${tagName}".`}
   >
     <h1 slot="title" transition:name={tag}>{`Tag:${tag}`}</h1>
     <ul>
-      {page.data.map(data => <Card {...data} />)}
+      {page.data.map((post) => (
+        <Card id={post.id} data={post.data} filePath={post.filePath} />
+      ))}
     </ul>
   </Main>
 

@@ -1,9 +1,10 @@
 ---
-question: "What is the N+1 query problem and how do you fix it?"
-answer: "N+1 happens when you fetch a list with 1 query, then execute N extra queries for related data (one per row). Fix with eager loading, JOIN, or batched `IN (...)` query to collapse round trips from O(N) to O(1)."
+title: "What is the N+1 query problem and how do you fix it?"
+description: "N+1 happens when you fetch a list with 1 query, then execute N extra queries for related data (one per row). Fix with eager loading, JOIN, or batched `IN (...)` query to collapse round trips from O(N) to O(1)."
 tags: ["database"]
 pubDatetime: 2026-04-22T11:04:00Z
 featured: false
+draft: false
 ---
 
 ## Why It Hurts
